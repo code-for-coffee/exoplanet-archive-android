@@ -29,6 +29,7 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
     private Intent mParentListIntent;
     private int mCategoryIndex;
     private ImageView mImageView;
+    private StellarCategory mItem;
     private FloatingActionButton mFab;
 
     private Bitmap mBackgroundImg;
@@ -40,13 +41,16 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(this);
         setContentView(R.layout.activity_stellarcategory_detail);
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
         mParentListIntent = getIntent();
         mCategoryIndex = Integer.parseInt(
                 mParentListIntent.getStringExtra(StellarCategoryDetailFragment.ARG_ITEM_ID)) + 1;
+        mItem = db.getStellarCategory(mCategoryIndex);
 
 
         imagesMap.put(1, R.drawable.stellar_cat_1);
@@ -61,8 +65,11 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, R.string.snackbar_msg_shared_item, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                IntentFactory factory = new IntentFactory();
+                startActivity(factory.ShareIntent(mItem.toString()));
+
             }
         });
 

@@ -14,4 +14,5 @@
         <item>Alpha Centauri A (to the left) is a type K star</item>
         <item>Proxima Centauri is a red dwarf and a type M star</item>
     </string-array>
+    <string name="snackbar_msg_shared_item">Sharing...</string>
 </resources>
