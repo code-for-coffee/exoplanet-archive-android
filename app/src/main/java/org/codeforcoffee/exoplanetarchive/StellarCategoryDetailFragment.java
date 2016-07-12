@@ -1,12 +1,17 @@
 package org.codeforcoffee.exoplanetarchive;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -41,9 +46,6 @@ public class StellarCategoryDetailFragment extends Fragment {
         PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(getContext());
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
             int arrayPosToTableId = Integer.valueOf(getArguments().getString(ARG_ITEM_ID)) + 1;
             mItem = db.getStellarCategory(arrayPosToTableId);
 
@@ -51,6 +53,7 @@ public class StellarCategoryDetailFragment extends Fragment {
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(mItem.getName());
+                //appBarLayout.setBackgroundColor(getArguments().getInt("TEXT_COLOUR"));
             }
         }
     }
@@ -58,11 +61,32 @@ public class StellarCategoryDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.stellarcategory_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
+        ImageView img = (ImageView) container.findViewById(R.id.stellarcategory_detail_imageview);
+
+        //Bitmap mBackgroundImg = ((BitmapDrawable)img.getDrawable()).getBitmap();
+
+        final View rootView = inflater.inflate(R.layout.stellarcategory_detail, container, false);
+
+//        Palette.generateAsync(mBackgroundImg, new Palette.PaletteAsyncListener() {
+//            @Override
+//            public void onGenerated(Palette palette) {
+//                int darkVibrantColor = palette.getDarkVibrantColor(0x000000);
+//                TextView labelTemp = (TextView) rootView.findViewById(R.id.stellarcategory_temprange);
+//                //labelTemp.setTextColor(darkVibrantColor);
+//            }
+//        });
+
         if (mItem != null) {
+            StringBuilder temperature = new StringBuilder();
+            temperature.append("As cold as  ");
+            temperature.append(String.valueOf(mItem.getMinTemp()));
+            temperature.append("K and upwards to ");
+            temperature.append(String.valueOf(mItem.getMaxTemp()));
+            temperature.append("K hot");
             ((TextView) rootView.findViewById(R.id.stellarcategory_detail)).setText(mItem.getDescription());
+            ((TextView) rootView.findViewById(R.id.stellarcategory_temprange)).setText(temperature.toString());
+            ((TextView) rootView.findViewById(R.id.stellarcategory_classname)).setText(mItem.getSpectralClass());
         }
 
         return rootView;

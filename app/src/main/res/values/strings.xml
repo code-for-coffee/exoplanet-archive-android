@@ -15,4 +15,7 @@
         <item>Proxima Centauri is a red dwarf and a type M star</item>
     </string-array>
     <string name="snackbar_msg_shared_item">Sharing...</string>
+    <string name="sc_class_label">Classification</string>
+    <string name="sc_desc_label">Description</string>
+    <string name="sc_temp_range_label">Temperature Range (in K)</string>
 </resources>

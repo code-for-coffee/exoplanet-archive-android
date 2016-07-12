@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.graphics.Palette;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +33,14 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
     private ImageView mImageView;
     private StellarCategory mItem;
     private FloatingActionButton mFab;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private Toolbar mToolbar;
+
+    private int mDarkColour;
+    private int mDarkMutedColour;
+    private int mAccentColour;
+    private int mLightColour;
+    private int mLightMutedColor;
 
     private Bitmap mBackgroundImg;
     private Palette.Swatch mSwatch;
@@ -44,14 +54,14 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
         PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(this);
         setContentView(R.layout.activity_stellarcategory_detail);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        setSupportActionBar(mToolbar);
 
         mParentListIntent = getIntent();
         mCategoryIndex = Integer.parseInt(
                 mParentListIntent.getStringExtra(StellarCategoryDetailFragment.ARG_ITEM_ID)) + 1;
         mItem = db.getStellarCategory(mCategoryIndex);
-
 
         imagesMap.put(1, R.drawable.stellar_cat_1);
         imagesMap.put(2, R.drawable.stellar_cat_2);
@@ -82,16 +92,28 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
         Palette.generateAsync(mBackgroundImg, new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
-                int vibrant = palette.getVibrantColor(0x000000);
-                int dark = palette.getDarkVibrantColor(0x000000);
+                mLightColour = palette.getLightVibrantColor(0x00000);
+                mAccentColour = palette.getVibrantColor(0x000000);
+                mDarkColour = palette.getDarkVibrantColor(0x000000);
+                mDarkMutedColour = palette.getDarkMutedColor(0x00000);
+                mLightMutedColor = palette.getLightMutedColor(0x00000);
                 mSwatch = palette.getVibrantSwatch();
 
                 if (mSwatch != null) {
                     //titleView.setBackgroundColor(swatch.getRgb());
                     //titleView.setTextColor(swatch.getTitleTextColor());
-                    mFab.setRippleColor(vibrant);
-                    mFab.setBackgroundTintList(ColorStateList.valueOf(vibrant));
-                }
+                    mFab.setRippleColor(mAccentColour);
+                    mFab.setBackgroundTintList(ColorStateList.valueOf(mAccentColour));
+                    mToolbar.setTitleTextColor(mLightColour);
+                    getWindow().setStatusBarColor(mDarkColour);
+                    //mToolbar.setBackgroundColor(mLightMutedColor);
+                    //  mutedColor = palette.getMutedColor(R.attr.colorPrimary);
+//                    mCollapsingToolbarLayout.setStatusBarScrimColor(palette.getVibrantColor(mDarkMutedColour));
+//                    mCollapsingToolbarLayout.setContentScrimColor(palette.getVibrantColor(mDarkMutedColour));
+                    mCollapsingToolbarLayout.setBackgroundColor(palette.getVibrantColor(mDarkMutedColour));
+                    mCollapsingToolbarLayout.setStatusBarScrimColor(palette.getVibrantColor(mDarkMutedColour));
+                    mCollapsingToolbarLayout.setStatusBarScrimColor(palette.getVibrantColor(mDarkMutedColour));
+                 }
             }
         });
 
@@ -117,6 +139,11 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putString(StellarCategoryDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(StellarCategoryDetailFragment.ARG_ITEM_ID));
+            arguments.putString("CLASS", mItem.getSpectralClass());
+            arguments.putString("NAME", mItem.getName());
+            arguments.putDouble("MIN_TEMP", mItem.getMinTemp());
+            arguments.putDouble("MAX_TEMP", mItem.getMaxTemp());
+            arguments.putString("DESC", mItem.getDescription());
             StellarCategoryDetailFragment fragment = new StellarCategoryDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
