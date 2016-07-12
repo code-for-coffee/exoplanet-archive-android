@@ -1,7 +1,7 @@
 package org.codeforcoffee.exoplanetarchive;
 
 /**
- * Created by codeforcoffee on 7/6/16.
+ * Created by codeforcoffee on stellar_cat_7/stellar_cat_6/16.
  */
 public class Planet {
 

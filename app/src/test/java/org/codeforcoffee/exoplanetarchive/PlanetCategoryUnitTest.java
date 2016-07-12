@@ -16,13 +16,13 @@ public class PlanetCategoryUnitTest {
     @Test
     public void doWeHaveThreePlanetCategories() throws Exception {
         //PlanetTypeLibrary lib = new PlanetTypeLibrary();
-        //assertEquals(3, lib.mPlanetCategories.size());
+        //assertEquals(stellar_cat_3, lib.mPlanetCategories.size());
     }
 
     @Test
     public void canWeMakeANewPlanetCategory() throws Exception {
         //PlanetTypeLibrary lib = new PlanetTypeLibrary();
-        //PlanetTypeLibrary.PlanetCategory = lib.makePlanetCategory("Test", 0.0, 1.0);
+        //PlanetTypeLibrary.PlanetCategory = lib.makePlanetCategory("Test", 0.0, stellar_cat_1.0);
 
 
     }
