@@ -5,4 +5,13 @@
     <string name="title_stellarcategory_detail">StellarCategory Detail</string>
     <string name="main_btn_stellar_categories">View Stellar Categories</string>
     <string name="main_btn_stars">View Stars</string>
+    <string-array name="star_image_descriptions">
+        <item>Alnatik, a type O star, in the flame nebula.</item>
+        <item>Alcyon, a type B star</item>
+        <item>Sirius A - a type A star</item>
+        <item>Canopus, a type F star</item>
+        <item>Tau Ceti, a type G star (and similar to our own Sun)</item>
+        <item>Alpha Centauri A (to the left) is a type K star</item>
+        <item>Proxima Centauri is a red dwarf and a type M star</item>
+    </string-array>
 </resources>
