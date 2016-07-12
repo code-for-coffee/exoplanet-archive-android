@@ -26,11 +26,12 @@ import java.util.Map;
  */
 public class StellarCategoryDetailActivity extends AppCompatActivity {
 
+    private Intent mParentListIntent;
+    private int mCategoryIndex;
     private ImageView mImageView;
     private FloatingActionButton mFab;
 
     private Bitmap mBackgroundImg;
-    private Palette mPalette;
     private Palette.Swatch mSwatch;
 
     Map<Integer, Integer> imagesMap = new HashMap<Integer, Integer>();
@@ -42,6 +43,11 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stellarcategory_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
+
+        mParentListIntent = getIntent();
+        mCategoryIndex = Integer.parseInt(
+                mParentListIntent.getStringExtra(StellarCategoryDetailFragment.ARG_ITEM_ID)) + 1;
+
 
         imagesMap.put(1, R.drawable.stellar_cat_1);
         imagesMap.put(2, R.drawable.stellar_cat_2);
@@ -62,19 +68,26 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
 
         mImageView = (ImageView) findViewById(R.id.stellarcategory_detail_imageview);
 
-        mImageView.setImageResource(imagesMap.get(1));
+        mImageView.setImageResource(imagesMap.get(mCategoryIndex));
 
         mBackgroundImg = ((BitmapDrawable)mImageView.getDrawable()).getBitmap();
-        mPalette = Palette.generate(mBackgroundImg);
-        int vibrant = mPalette.getVibrantColor(0x000000);
-        mSwatch = mPalette.getVibrantSwatch();
 
-        if (mSwatch != null) {
-            //titleView.setBackgroundColor(swatch.getRgb());
-            //titleView.setTextColor(swatch.getTitleTextColor());
-            mFab.setRippleColor(vibrant);
-            mFab.setBackgroundTintList(ColorStateList.valueOf(vibrant));
-        }
+        Palette.generateAsync(mBackgroundImg, new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                int vibrant = palette.getVibrantColor(0x000000);
+                mSwatch = palette.getVibrantSwatch();
+
+                if (mSwatch != null) {
+                    //titleView.setBackgroundColor(swatch.getRgb());
+                    //titleView.setTextColor(swatch.getTitleTextColor());
+                    mFab.setRippleColor(vibrant);
+                    mFab.setBackgroundTintList(ColorStateList.valueOf(vibrant));
+                }
+            }
+        });
+
+
 
 
         // Show the Up button in the action bar.
