@@ -1,6 +1,6 @@
-package org.codeforcoffee.planetbuilder;
+package org.codeforcoffee.exoplanetarchive;
 
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,19 +9,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Intent mStellarCatIntent;
+
+    private Button mStellarCatBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(this);
-
-        // first star
-        StellarCategory firstStellarCategory = new StellarCategory(getResources().getString(R.string.stellar_type_0_class), getResources().getString(R.string.stellar_type_0_name), Double.valueOf(getResources().getString(R.string.stellar_type_0_min_temp)), Double.valueOf(getResources().getString(R.string.stellar_type_0_max_temp)), getResources().getString(R.string.stellar_type_0_min_desc));
-
-        db.addStellarCategory(firstStellarCategory);
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -35,6 +35,18 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        mStellarCatIntent = new Intent(MainActivity.this, StellarCategoryListActivity.class);
+        mStellarCatBtn = (Button) findViewById(R.id.main_btn_stellar_categories);
+
+        mStellarCatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(mStellarCatIntent);
+            }
+        });
+
+
     }
 
     @Override
@@ -43,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -1,4 +1,4 @@
-package org.codeforcoffee.planetbuilder;
+package org.codeforcoffee.exoplanetarchive;
 
 /**
  * Created by codeforcoffee on 7/10/16.

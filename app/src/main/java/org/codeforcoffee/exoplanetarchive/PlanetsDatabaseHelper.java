@@ -1,9 +1,13 @@
-package org.codeforcoffee.planetbuilder;
+package org.codeforcoffee.exoplanetarchive;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by codeforcoffee on 7/8/16.
@@ -12,7 +16,7 @@ public class PlanetsDatabaseHelper extends SQLiteOpenHelper {
 
     // db version & name
     public static final String DATABASE_NAME = "Planets.db";
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 11;
 
     // table specific private classes statements
     public static final String PLANET_CATEGORY_TABLE_NAME = "planet_categories";
@@ -27,6 +31,7 @@ public class PlanetsDatabaseHelper extends SQLiteOpenHelper {
     public static final String STELLAR_CATEGORY_COL_MIN_TEMPERATURE = "min_temperature";
     public static final String STELLAR_CATEGORY_COL_MAX_TEMPERATURE = "max_temperature";
     public static final String STELLAR_CATEGORY_COL_NAME = "name";
+    public static final String STELLAR_CATEGORY_COL_CLASS = "classification";
     public static final String STELLAR_CATEGORY_COL_DESC = "description";
 
     public static final String PLANET_TABLE_NAME = "planets";
@@ -92,6 +97,8 @@ public class PlanetsDatabaseHelper extends SQLiteOpenHelper {
         sb.append(STELLAR_CATEGORY_COL_ID);
         sb.append(" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ");
         sb.append(STELLAR_CATEGORY_COL_NAME);
+        sb.append(" TEXT, ");
+        sb.append(STELLAR_CATEGORY_COL_CLASS);
         sb.append(" TEXT, ");
         sb.append(STELLAR_CATEGORY_COL_DESC);
         sb.append(" TEXT, ");
@@ -188,14 +195,71 @@ public class PlanetsDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
         ContentValues values = new ContentValues();
-        values.put(STELLAR_CATEGORY_COL_ID, "null");
         values.put(STELLAR_CATEGORY_COL_NAME, category.getName());
+        values.put(STELLAR_CATEGORY_COL_CLASS, category.getSpectralClass());
         values.put(STELLAR_CATEGORY_COL_MIN_TEMPERATURE, category.getMinTemp());
         values.put(STELLAR_CATEGORY_COL_MAX_TEMPERATURE, category.getMaxTemp());
         values.put(STELLAR_CATEGORY_COL_DESC, category.getDescription());
-        db.insert(STELLAR_CATEGORY_TABLE_NAME, null,values);
+        db.insert(STELLAR_CATEGORY_TABLE_NAME, null, values);
         db.setTransactionSuccessful();
         db.endTransaction();
+    }
+
+    public void seedStellarCategory(StellarCategory category, SQLiteDatabase db) {
+        db.beginTransaction();
+        ContentValues values = new ContentValues();
+        values.put(STELLAR_CATEGORY_COL_NAME, category.getName());
+        values.put(STELLAR_CATEGORY_COL_CLASS, category.getSpectralClass());
+        values.put(STELLAR_CATEGORY_COL_MIN_TEMPERATURE, category.getMinTemp());
+        values.put(STELLAR_CATEGORY_COL_MAX_TEMPERATURE, category.getMaxTemp());
+        values.put(STELLAR_CATEGORY_COL_DESC, category.getDescription());
+        db.insert(STELLAR_CATEGORY_TABLE_NAME, null, values);
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
+    public StellarCategory getStellarCategory(int id) {
+        SQLiteDatabase db = getReadableDatabase();
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM ");
+        query.append(STELLAR_CATEGORY_TABLE_NAME);
+        query.append(" WHERE ");
+        query.append(STELLAR_CATEGORY_COL_ID);
+        query.append(" = ");
+        query.append(String.valueOf(id));
+        Cursor cursor = db.rawQuery(query.toString(), null);
+        if (cursor.moveToFirst()) {
+            return new StellarCategory(
+                    cursor.getString(cursor.getColumnIndex(STELLAR_CATEGORY_COL_CLASS)),
+                    cursor.getString(cursor.getColumnIndex(STELLAR_CATEGORY_COL_NAME)),
+                    cursor.getDouble(cursor.getColumnIndex(STELLAR_CATEGORY_COL_MIN_TEMPERATURE)),
+                    cursor.getDouble(cursor.getColumnIndex(STELLAR_CATEGORY_COL_MAX_TEMPERATURE)),
+                    cursor.getString(cursor.getColumnIndex(STELLAR_CATEGORY_COL_DESC))
+            );
+        }
+        return null;
+    }
+
+    public List<StellarCategory> getAllStellarCategories() {
+        List<StellarCategory> categories = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM ");
+        query.append(STELLAR_CATEGORY_TABLE_NAME);
+        Cursor cursor = db.rawQuery(query.toString(), null);
+        if (cursor.moveToFirst()) {
+            do {
+                categories.add(new StellarCategory(
+                        cursor.getString(cursor.getColumnIndex(STELLAR_CATEGORY_COL_CLASS)),
+                        cursor.getString(cursor.getColumnIndex(STELLAR_CATEGORY_COL_NAME)),
+                        cursor.getDouble(cursor.getColumnIndex(STELLAR_CATEGORY_COL_MIN_TEMPERATURE)),
+                        cursor.getDouble(cursor.getColumnIndex(STELLAR_CATEGORY_COL_MAX_TEMPERATURE)),
+                        cursor.getString(cursor.getColumnIndex(STELLAR_CATEGORY_COL_DESC))
+                ));
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        return categories;
     }
 
 
@@ -215,7 +279,7 @@ public class PlanetsDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createStellarCategoryTable());
         db.execSQL(createPlanetTable());
         db.execSQL(createStarTable());
-
+        seedDatabase(db);
     }
 
     @Override
@@ -225,5 +289,28 @@ public class PlanetsDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(dropPlanetTable());
         db.execSQL(dropStarTable());
         onCreate(db);
+    }
+
+    /***
+     * Seed SQLiteDatabase db with data
+     * @param db
+     */
+    public void seedDatabase(SQLiteDatabase db) {
+        // first star
+        StellarCategory firstStellarCategory = new StellarCategory("O", "Blue", 30000, 60000, "These are the rarest of all main-sequence stars. About 1 in 3,000,000 (0.00003%) of the main-sequence stars in the solar neighborhood are O-type stars. Some of the most massive stars lie within this spectral class. Because of their early development, the O-Type stars are already luminous in the huge hydrogen and helium clouds in which lower mass stars are forming. They light the stellar nurseries with ultraviolet light and cause the clouds to glow in some of the dramatic nebulae associated with the H II regions.");
+        StellarCategory secondStellarCategory = new StellarCategory("B", "Blue-White", 10000, 30000, "B-type stars are very luminous and blue. As O- and B-type stars are so energetic, they only live for a relatively short time. Thus, due to the low probability of kinematic interaction during their lifetime, they are unable to stray far from the area in which they formed, apart from runaway stars. which are associated with giant molecular clouds. About 1 in 800 (0.125%) of the main-sequence stars in the solar neighborhood are B-type main-sequence objects.");
+        StellarCategory thirdStellarCategory = new StellarCategory("A", "White", 7500, 10000, "A-type stars are among the more common naked eye stars, and are white or bluish-white. About 1 in 160 (0.625%) of the main-sequence stars in the solar neighborhood are A-type stars.");
+        StellarCategory fourthCategory = new StellarCategory("F", "Yellow-White", 6000, 7500, "F-type stars have strengthening H and K lines of Ca II. N Their spectra are characterized by the weaker hydrogen lines and ionized metals. Their color is white. About 1 in 33 (3.03%) of the main-sequence stars in the solar neighborhood are F-type stars.");
+        StellarCategory fifthCategory = new StellarCategory("G", "Yellow", 5000, 6000, "G-type stars  include the Sun. Class G main-sequence stars make up about 7.5%, nearly one in thirteen, of the main-sequence stars in the solar neighborhood. G is host to the \"Yellow Evolutionary Void\". Supergiant stars often swing between O or B (blue) and K or M (red). While they do this, they do not stay for long in the yellow supergiant G classification as this is an extremely unstable place for a supergiant to be.");
+        StellarCategory sixthCategory = new StellarCategory("K", "Yellow-Orange", 3500, 5000, "K-type stars are orangish stars that are slightly cooler than the Sun. They make up about 12%, nearly one in eight, of the main-sequence stars in the solar neighborhood. There are also giant K-type stars, which range from hypergiants like RW Cephei, to giants and supergiants, such as Arcturus, whereas orange dwarfs, like Alpha Centauri B, are main-sequence stars. There is a suggestion that K Spectrum stars may potentially increase the chances of life developing on orbiting planets that are within the habitable zone.");
+        StellarCategory seventhCategory = new StellarCategory("M", "Red", 0, 3500, "Class M stars are by far the most common. About 76% of the main-sequence stars in the solar neighborhood are class M stars. However, class M main-sequence stars (red dwarfs) have such low luminosities that none are bright enough to be seen with the unaided eye, unless under exceptional conditions. Although most class M stars are red dwarfs, most giants and some supergiants such as VY Canis Majoris, Antares and Betelgeuse are also class M. Furthermore, the hotter brown dwarfs are late class M.");
+
+        seedStellarCategory(firstStellarCategory, db);
+        seedStellarCategory(secondStellarCategory, db);
+        seedStellarCategory(thirdStellarCategory, db);
+        seedStellarCategory(fourthCategory, db);
+        seedStellarCategory(fifthCategory, db);
+        seedStellarCategory(sixthCategory, db);
+        seedStellarCategory(seventhCategory, db);
     }
 }

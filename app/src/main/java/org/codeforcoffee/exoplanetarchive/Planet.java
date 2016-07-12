@@ -1,6 +1,4 @@
-package org.codeforcoffee.planetbuilder;
-
-import android.icu.math.BigDecimal;
+package org.codeforcoffee.exoplanetarchive;
 
 /**
  * Created by codeforcoffee on 7/6/16.
