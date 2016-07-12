@@ -1,14 +1,22 @@
 package org.codeforcoffee.exoplanetarchive;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.ImageView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An activity representing a single StellarCategory detail screen. This
@@ -18,6 +26,16 @@ import android.view.MenuItem;
  */
 public class StellarCategoryDetailActivity extends AppCompatActivity {
 
+    private ImageView mImageView;
+    private FloatingActionButton mFab;
+
+    private Bitmap mBackgroundImg;
+    private Palette mPalette;
+    private Palette.Swatch mSwatch;
+
+    Map<Integer, Integer> imagesMap = new HashMap<Integer, Integer>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,14 +43,39 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        imagesMap.put(1, R.drawable.stellar_cat_1);
+        imagesMap.put(2, R.drawable.stellar_cat_2);
+        imagesMap.put(3, R.drawable.stellar_cat_3);
+        imagesMap.put(4, R.drawable.stellar_cat_4);
+        imagesMap.put(5, R.drawable.stellar_cat_5);
+        imagesMap.put(6, R.drawable.stellar_cat_6);
+        imagesMap.put(7, R.drawable.stellar_cat_7);
+
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+
+        mImageView = (ImageView) findViewById(R.id.stellarcategory_detail_imageview);
+
+        mImageView.setImageResource(imagesMap.get(1));
+
+        mBackgroundImg = ((BitmapDrawable)mImageView.getDrawable()).getBitmap();
+        mPalette = Palette.generate(mBackgroundImg);
+        int vibrant = mPalette.getVibrantColor(0x000000);
+        mSwatch = mPalette.getVibrantSwatch();
+
+        if (mSwatch != null) {
+            //titleView.setBackgroundColor(swatch.getRgb());
+            //titleView.setTextColor(swatch.getTitleTextColor());
+            mFab.setRippleColor(vibrant);
+            mFab.setBackgroundTintList(ColorStateList.valueOf(vibrant));
+        }
+
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();

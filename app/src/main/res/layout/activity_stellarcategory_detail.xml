@@ -24,9 +24,9 @@
             app:toolbarId="@+id/toolbar">
 
             <ImageView
+                android:id="@+id/stellarcategory_detail_imageview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/stellar_cat_1"
                 android:scaleType="centerCrop"/>
 
             <android.support.v7.widget.Toolbar
@@ -53,6 +53,7 @@
         android:layout_gravity="center_vertical|start"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_menu_share"
+        android:tint="@color/white"
         app:layout_anchor="@+id/stellarcategory_detail_container"
         app:layout_anchorGravity="top|end"/>
 
