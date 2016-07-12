@@ -41,7 +41,7 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stellarcategory_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
         mParentListIntent = getIntent();
@@ -76,6 +76,7 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
             @Override
             public void onGenerated(Palette palette) {
                 int vibrant = palette.getVibrantColor(0x000000);
+                int dark = palette.getDarkVibrantColor(0x000000);
                 mSwatch = palette.getVibrantSwatch();
 
                 if (mSwatch != null) {
@@ -86,8 +87,6 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
                 }
             }
         });
-
-
 
 
         // Show the Up button in the action bar.
