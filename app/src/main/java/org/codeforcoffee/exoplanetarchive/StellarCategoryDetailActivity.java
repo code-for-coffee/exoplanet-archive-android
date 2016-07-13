@@ -33,6 +33,7 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
     private ImageView mImageView;
     private StellarCategory mItem;
     private FloatingActionButton mFab;
+    private FloatingActionButton mSaveNotesFab;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private Toolbar mToolbar;
 
@@ -72,6 +73,16 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
         imagesMap.put(6, R.drawable.stellar_cat_6);
         imagesMap.put(7, R.drawable.stellar_cat_7);
 
+        mSaveNotesFab = (FloatingActionButton) findViewById(R.id.fab_save_note);
+        mSaveNotesFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Notes notes = Notes.getInstance();
+                notes.add(mItem.toString());
+                Snackbar.make(view, R.string.snackbar_saved_note, Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+            }
+        });
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +116,8 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
                     //titleView.setTextColor(swatch.getTitleTextColor());
                     mFab.setRippleColor(mAccentColour);
                     mFab.setBackgroundTintList(ColorStateList.valueOf(mAccentColour));
+                    mSaveNotesFab.setRippleColor(mAccentColour);
+                    mSaveNotesFab.setBackgroundTintList(ColorStateList.valueOf(mAccentColour));
                     mToolbar.setTitleTextColor(mLightColour);
                     getWindow().setStatusBarColor(mDarkColour);
                     //mToolbar.setBackgroundColor(mLightMutedColor);

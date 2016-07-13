@@ -19,9 +19,10 @@ import android.widget.ImageView;
 public class MainActivity extends AppCompatActivity {
 
     private Intent mStellarCatIntent;
+    private Intent mNotesIntent;
 
     private Button mStellarCatBtn;
-    private FloatingActionButton mFab;
+    private Button mNotesBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,23 +34,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         mStellarCatIntent = new Intent(MainActivity.this, StellarCategoryListActivity.class);
         mStellarCatBtn = (Button) findViewById(R.id.main_btn_stellar_categories);
+
+        mNotesIntent = new Intent(MainActivity.this, NotesScrollingActivity.class);
+        mNotesBtn = (Button) findViewById(R.id.main_btn_notes);
 
         mStellarCatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(mStellarCatIntent);
+            }
+        });
+
+        mNotesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(mNotesIntent);
             }
         });
 

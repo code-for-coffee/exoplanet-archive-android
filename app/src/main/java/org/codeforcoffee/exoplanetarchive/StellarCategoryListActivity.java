@@ -43,6 +43,7 @@ public class StellarCategoryListActivity extends AppCompatActivity {
     private boolean mFromSearch = false;
     private String mSearchQuery;
     private RecyclerView recyclerView;
+    private SimpleItemRecyclerViewAdapter mRecyclerAdapter;
 
     private void handleIntent(Intent intent) {
         PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(this);
@@ -83,7 +84,8 @@ public class StellarCategoryListActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.stellarcategory_list);
         assert recyclerView != null;
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(mCategoryList));
+        mRecyclerAdapter = new SimpleItemRecyclerViewAdapter(mCategoryList);
+        recyclerView.setAdapter(mRecyclerAdapter);
 
 
         if (findViewById(R.id.stellarcategory_detail_container) != null) {

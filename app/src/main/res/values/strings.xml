@@ -20,4 +20,8 @@
     <string name="sc_temp_range_label">Temperature Range (in K)</string>
     <string name="sc_search_hint">Search for stellar categories...</string>
     <string name="snackbar_msg_reloaded_sc">Resetting Search...</string>
+    <string name="snackbar_notes_delete">Clearing notes...</string>
+    <string name="title_activity_notes_scrolling">Notes</string>
+    <string name="main_btn_notes">View your saved Notes</string>
+    <string name="snackbar_saved_note">You note has been saved!</string>
 </resources>
