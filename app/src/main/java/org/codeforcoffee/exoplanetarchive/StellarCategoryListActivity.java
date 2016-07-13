@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -15,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -43,14 +45,16 @@ public class StellarCategoryListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private void handleIntent(Intent intent) {
+        PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(this);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             mSearchQuery = intent.getStringExtra(SearchManager.QUERY);
             mFromSearch = true;
-            PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(this);
             mCategoryList = db.searchAllStellarCategories(mSearchQuery);
             recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(mCategoryList));
         } else {
             mFromSearch = false;
+            mCategoryList = db.getAllStellarCategories();
+            recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(mCategoryList));
         }
     }
 
@@ -109,12 +113,24 @@ public class StellarCategoryListActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.stellarcategories_list_menu, menu);
 
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.sc_search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchMenuItem = menu.findItem(R.id.sc_search);
+
+        MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                handleIntent(new Intent());
+                return true;
+            }
+        });
+
+        SearchView searchView = (SearchView) menu.findItem(R.id.sc_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         return true;
     }
