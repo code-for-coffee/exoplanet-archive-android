@@ -97,7 +97,7 @@ public class StellarCategoryListActivity extends AppCompatActivity {
                 PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(getApplicationContext());
                 mCategoryList = db.getAllStellarCategories();
                 recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(mCategoryList));
-                Snackbar.make(view, R.string.snackbar_msg_reloaded_sc, Snackbar.LENGTH_LONG)
+                Snackbar.make(view, R.string.snackbar_msg_reloaded_sc, Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
                 IntentFactory factory = new IntentFactory();
             }
@@ -147,7 +147,7 @@ public class StellarCategoryListActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(StellarCategoryDetailFragment.ARG_ITEM_ID, String.valueOf(pos));
+                        arguments.putString(StellarCategoryDetailFragment.ARG_ITEM_ID, String.valueOf(mValues.get(pos).getId()));
                         StellarCategoryDetailFragment fragment = new StellarCategoryDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
