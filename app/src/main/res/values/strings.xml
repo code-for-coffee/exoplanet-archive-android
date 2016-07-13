@@ -18,4 +18,6 @@
     <string name="sc_class_label">Classification</string>
     <string name="sc_desc_label">Description</string>
     <string name="sc_temp_range_label">Temperature Range (in K)</string>
+    <string name="sc_search_hint">Search for stellar categories...</string>
+    <string name="snackbar_msg_reloaded_sc">Resetting Search...</string>
 </resources>

@@ -59,8 +59,9 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         mParentListIntent = getIntent();
+
         mCategoryIndex = Integer.parseInt(
-                mParentListIntent.getStringExtra(StellarCategoryDetailFragment.ARG_ITEM_ID)) + 1;
+                mParentListIntent.getStringExtra(StellarCategoryDetailFragment.ARG_ITEM_ID)) - 1;
         mItem = db.getStellarCategory(mCategoryIndex);
 
         imagesMap.put(1, R.drawable.stellar_cat_1);
@@ -85,7 +86,7 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
 
         mImageView = (ImageView) findViewById(R.id.stellarcategory_detail_imageview);
 
-        mImageView.setImageResource(imagesMap.get(mCategoryIndex));
+        mImageView.setImageResource(imagesMap.get(mItem.getId()));
 
         mBackgroundImg = ((BitmapDrawable)mImageView.getDrawable()).getBitmap();
 

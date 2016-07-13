@@ -5,6 +5,7 @@ package org.codeforcoffee.exoplanetarchive;
  */
 public class StellarCategory {
 
+    private int id;
     private String spectralClass;
     private String name;
     private double minTemp;
@@ -20,13 +21,16 @@ public class StellarCategory {
      * @param maxTemp
      * @param desc
      */
-    public StellarCategory(String spectralClass, String colour, double minTemp, double maxTemp, String desc) {
+    public StellarCategory(int id, String spectralClass, String colour, double minTemp, double maxTemp, String desc) {
+        this.id = id;
         this.spectralClass = spectralClass;
         this.name = colour;
         this.minTemp = minTemp;
         this.maxTemp = maxTemp;
         this.description = desc;
     }
+
+    public int getId() { return id; }
 
     public String getSpectralClass() {
         return spectralClass;

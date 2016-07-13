@@ -1,13 +1,20 @@
 package org.codeforcoffee.exoplanetarchive;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -31,6 +38,26 @@ public class StellarCategoryListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private List<StellarCategory> mCategoryList;
+    private boolean mFromSearch = false;
+    private String mSearchQuery;
+    private RecyclerView recyclerView;
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            mSearchQuery = intent.getStringExtra(SearchManager.QUERY);
+            mFromSearch = true;
+            PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(this);
+            mCategoryList = db.searchAllStellarCategories(mSearchQuery);
+            recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(mCategoryList));
+        } else {
+            mFromSearch = false;
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +65,11 @@ public class StellarCategoryListActivity extends AppCompatActivity {
 
         PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(this);
 
-        mCategoryList = db.getAllStellarCategories();
-
+        if (mFromSearch == true) {
+            mCategoryList = db.searchAllStellarCategories(mSearchQuery);
+        } else {
+            mCategoryList = db.getAllStellarCategories();
+        }
 
         setContentView(R.layout.activity_stellarcategory_list);
 
@@ -47,9 +77,10 @@ public class StellarCategoryListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        View recyclerView = findViewById(R.id.stellarcategory_list);
+        recyclerView = (RecyclerView) findViewById(R.id.stellarcategory_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(mCategoryList));
+
 
         if (findViewById(R.id.stellarcategory_detail_container) != null) {
             // The detail container view will be present only in the
@@ -58,10 +89,34 @@ public class StellarCategoryListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(getApplicationContext());
+                mCategoryList = db.getAllStellarCategories();
+                recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(mCategoryList));
+                Snackbar.make(view, R.string.snackbar_msg_reloaded_sc, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                IntentFactory factory = new IntentFactory();
+            }
+        });
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(mCategoryList));
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.stellarcategories_list_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.sc_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        return true;
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -101,7 +156,7 @@ public class StellarCategoryListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, StellarCategoryDetailActivity.class);
-                        intent.putExtra(StellarCategoryDetailFragment.ARG_ITEM_ID, String.valueOf(pos));
+                        intent.putExtra(StellarCategoryDetailFragment.ARG_ITEM_ID, String.valueOf(mValues.get(pos).getId()));
 
                         context.startActivity(intent);
                     }

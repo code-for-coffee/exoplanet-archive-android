@@ -46,7 +46,7 @@ public class StellarCategoryDetailFragment extends Fragment {
         PlanetsDatabaseHelper db = PlanetsDatabaseHelper.getInstance(getContext());
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            int arrayPosToTableId = Integer.valueOf(getArguments().getString(ARG_ITEM_ID)) + 1;
+            int arrayPosToTableId = Integer.valueOf(getArguments().getString(ARG_ITEM_ID));
             mItem = db.getStellarCategory(arrayPosToTableId);
 
             Activity activity = this.getActivity();
