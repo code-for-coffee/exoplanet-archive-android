@@ -1,5 +1,8 @@
 package org.codeforcoffee.exoplanetarchive;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by codeforcoffee on stellar_cat_7/10/16.
  */
@@ -54,12 +57,16 @@ public class StellarCategory {
 
     @Override
     public String toString() {
-        return "StellarCategory{" +
-                "spectralClass=" + spectralClass +
-                ", colour='" + name + '\'' +
-                ", minTemp=" + minTemp +
-                ", maxTemp=" + maxTemp +
-                ", description='" + description + '\'' +
+        return "{ " +
+                "\"spectralClass\":\"" + spectralClass + "\"," +
+                "\"colour\":\"" + name + '\'' + "\"," +
+                "\"minTemp\":\"" + minTemp + "\"," +
+                "\"maxTemp\":\"" + maxTemp + "\"," +
+                "\"description\":\"" + description + '\'' + "\"" +
                 '}';
+    }
+
+    public JSONObject toJSONObject() throws JSONException {
+        return new JSONObject(this.toString());
     }
 }

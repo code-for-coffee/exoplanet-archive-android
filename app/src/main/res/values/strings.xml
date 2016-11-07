@@ -24,4 +24,6 @@
     <string name="title_activity_notes_scrolling">Notes</string>
     <string name="main_btn_notes">View your saved Notes</string>
     <string name="snackbar_saved_note">You note has been saved!</string>
+    <string name="card_stellar_cat_title">Stellar (Star) Categories</string>
+    <string name="card_stellar_cat_desc">Tap on this card to learn more about star types.</string>
 </resources>

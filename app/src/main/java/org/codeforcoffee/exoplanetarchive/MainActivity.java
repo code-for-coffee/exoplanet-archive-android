@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
@@ -21,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private Intent mStellarCatIntent;
     private Intent mNotesIntent;
 
-    private Button mStellarCatBtn;
     private Button mNotesBtn;
+    private CardView mStellarCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,24 +36,24 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mStellarCatIntent = new Intent(MainActivity.this, StellarCategoryListActivity.class);
-        mStellarCatBtn = (Button) findViewById(R.id.main_btn_stellar_categories);
+        mStellarCard = (CardView) findViewById(R.id.main_btn_stellar_categories);
 
         mNotesIntent = new Intent(MainActivity.this, NotesScrollingActivity.class);
-        mNotesBtn = (Button) findViewById(R.id.main_btn_notes);
+        //mNotesBtn = (Button) findViewById(R.id.main_btn_notes);
 
-        mStellarCatBtn.setOnClickListener(new View.OnClickListener() {
+        mStellarCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(mStellarCatIntent);
             }
         });
 
-        mNotesBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(mNotesIntent);
-            }
-        });
+//        mNotesBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(mNotesIntent);
+//            }
+//        });
 
 
     }

@@ -14,15 +14,14 @@
     tools:context="org.codeforcoffee.exoplanetarchive.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/main_btn_stellar_categories"
-        android:text="@string/main_btn_stellar_categories"/>
+    <include layout="@layout/card_stellar_categories"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:id="@+id/main_btn_stellar_categories"></include>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/main_btn_notes"
-        android:text="@string/main_btn_notes"/>
+    <!--<Button-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/main_btn_notes"-->
+        <!--android:text="@string/main_btn_notes"/>-->
 </LinearLayout>
