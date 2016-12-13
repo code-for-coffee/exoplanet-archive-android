@@ -1,5 +1,6 @@
 package org.codeforcoffee.exoplanetarchive;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -59,7 +60,16 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         setSupportActionBar(mToolbar);
 
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         mParentListIntent = getIntent();
+
+        mSaveNotesFab = (FloatingActionButton) findViewById(R.id.fab_save_note);
+        mSaveNotesFab.hide();
 
         mCategoryIndex = Integer.parseInt(
                 mParentListIntent.getStringExtra(StellarCategoryDetailFragment.ARG_ITEM_ID));
@@ -73,7 +83,6 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
         imagesMap.put(6, R.drawable.stellar_cat_6);
         imagesMap.put(7, R.drawable.stellar_cat_7);
 
-        mSaveNotesFab = (FloatingActionButton) findViewById(R.id.fab_save_note);
         mSaveNotesFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,11 +141,7 @@ public class StellarCategoryDetailActivity extends AppCompatActivity {
         });
 
 
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
